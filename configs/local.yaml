@@ -1,0 +1,9 @@
+arxiv:
+  mode: local
+  use_cache_fallback: true
+
+embeddings:
+  local_files_only: true
+
+qdrant:
+  mode: local

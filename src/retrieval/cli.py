@@ -2,7 +2,8 @@ import argparse
 import json
 from pathlib import Path
 
-from src.retrieval import BM25Index, HybridRetriever, QdrantVectorStore, SentenceTransformerEmbedder
+from src.retrieval import BM25Index, HybridRetriever, QdrantVectorStore
+from src.retrieval.embeddings import SentenceTransformerEmbedder
 from src.utils.config import load_config
 from src.utils.logging import setup_logging
 

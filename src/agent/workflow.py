@@ -11,7 +11,7 @@ from src.agent.reporting import SYSTEM_PROMPT, build_report_from_llm, build_repo
 from src.agent.schemas import ResearchReport
 from src.ingestion.arxiv_client import search_papers
 from src.ingestion.chunker import chunk_paper
-from src.retrieval import BM25Index, HybridRetriever, QdrantVectorStore, SentenceTransformerEmbedder
+from src.retrieval import BM25Index, HybridRetriever, QdrantVectorStore
 from src.retrieval.hybrid import RetrievalResult
 
 
@@ -33,7 +33,7 @@ class ResearchWorkflow:
         self.config = config
         self.retriever = retriever or HybridRetriever(
             config=config,
-            embedder=SentenceTransformerEmbedder(config),
+            embedder=build_embedder(config),
             vector_store=QdrantVectorStore(config),
             bm25_index=BM25Index(),
         )
@@ -107,3 +107,9 @@ def load_cached_chunks(path: Path) -> list[dict[str, object]]:
     if not isinstance(chunks, list) or not chunks:
         raise ValueError(f"ArXiv cache has no chunks: {path}")
     return [dict(chunk) for chunk in chunks]
+
+
+def build_embedder(config: DictConfig) -> Any:
+    from src.retrieval.embeddings import SentenceTransformerEmbedder
+
+    return SentenceTransformerEmbedder(config)

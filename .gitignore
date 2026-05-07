@@ -7,3 +7,5 @@ models/
 .mypy_cache/
 .ruff_cache/
 .test_tmp/
+unsloth_compiled_cache/
+*.egg-info/

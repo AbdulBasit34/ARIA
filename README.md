@@ -77,3 +77,53 @@ In another PowerShell window:
 ```powershell
 Invoke-RestMethod -Method Post -Uri http://127.0.0.1:8000/research -ContentType "application/json" -Body '{"question":"How does hybrid retrieval improve research question answering?"}'
 ```
+
+## Module 6 Verification
+
+Install the fine-tuning stack:
+
+```powershell
+python -m pip install -e ".[finetune]"
+python -c "import torch; print(torch.cuda.is_available()); print(torch.cuda.get_device_name(0))"
+```
+
+Run smoke tests:
+
+```powershell
+python -m pytest tests/test_finetuning.py -q
+python -m src.finetuning.train_qlora --config configs/config.yaml --preflight
+```
+
+Start QLoRA training:
+
+```powershell
+python -m src.finetuning.train_qlora --config configs/config.yaml
+```
+
+Create an Ollama Modelfile after training:
+
+```powershell
+python -m src.finetuning.export_ollama --config configs/config.yaml --output models/Modelfile.aria
+ollama create aria-llama3-8b-q4 -f models/Modelfile.aria
+```
+
+## Module 7 Verification
+
+```powershell
+python -m pytest tests/test_ops.py -q
+python -m src.ops.cli --profile configs/local.yaml
+python -m src.ops.cli --profile configs/local.yaml --require-ollama
+```
+
+## Module 8 Verification
+
+```powershell
+python -m pytest tests/test_e2e.py -q
+python -m src.ops.e2e "How does hybrid retrieval improve research question answering?" --profile configs/local.yaml --output data/reports/latest_report.json
+```
+
+Switch to online ArXiv at the end:
+
+```powershell
+python -m src.ops.e2e "How does hybrid retrieval improve research question answering?" --profile configs/online.yaml --output data/reports/online_report.json
+```

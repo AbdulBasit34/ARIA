@@ -1,11 +1,19 @@
 from dataclasses import dataclass
+from typing import Protocol
 
 from omegaconf import DictConfig
 
 from src.retrieval.bm25 import BM25Document, BM25Index
-from src.retrieval.embeddings import Embedder
 from src.retrieval.qdrant_store import QdrantVectorStore
 from src.retrieval.rrf import reciprocal_rank_fusion
+
+
+class Embedder(Protocol):
+    def embed_texts(self, texts: list[str]) -> list[list[float]]:
+        ...
+
+    def embed_query(self, query: str) -> list[float]:
+        ...
 
 
 @dataclass(frozen=True)

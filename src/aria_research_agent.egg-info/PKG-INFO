@@ -3,25 +3,30 @@ Name: aria-research-agent
 Version: 0.1.0
 Summary: ARIA: Autonomous Research Intelligence Agent
 Requires-Python: >=3.11
-Requires-Dist: arxiv>=2.1.3
-Requires-Dist: fastapi>=0.115.0
-Requires-Dist: httpx>=0.27.0
-Requires-Dist: langgraph>=0.2.60
-Requires-Dist: loguru>=0.7.2
-Requires-Dist: omegaconf>=2.3.0
-Requires-Dist: pydantic>=2.9.0
-Requires-Dist: pytest>=8.3.0
-Requires-Dist: python-dotenv>=1.0.1
-Requires-Dist: qdrant-client>=1.12.0
-Requires-Dist: rank-bm25>=0.2.2
-Requires-Dist: sentence-transformers>=3.2.0
-Requires-Dist: torch>=2.4.0
-Requires-Dist: transformers>=4.45.0
-Requires-Dist: uvicorn[standard]>=0.32.0
+Requires-Dist: arxiv
+Requires-Dist: fastapi
+Requires-Dist: httpx
+Requires-Dist: langgraph
+Requires-Dist: loguru
+Requires-Dist: omegaconf
+Requires-Dist: pydantic
+Requires-Dist: pytest
+Requires-Dist: python-dotenv
+Requires-Dist: qdrant-client
+Requires-Dist: rank-bm25
+Requires-Dist: sentence-transformers
+Requires-Dist: torch
+Requires-Dist: transformers
+Requires-Dist: uvicorn[standard]
 Provides-Extra: finetune
-Requires-Dist: accelerate>=0.34.0; extra == "finetune"
-Requires-Dist: bitsandbytes>=0.43.3; extra == "finetune"
-Requires-Dist: datasets>=3.0.0; extra == "finetune"
-Requires-Dist: peft>=0.13.0; extra == "finetune"
-Requires-Dist: trl>=0.11.0; extra == "finetune"
+Requires-Dist: accelerate; extra == "finetune"
+Requires-Dist: bitsandbytes; extra == "finetune"
+Requires-Dist: datasets; extra == "finetune"
+Requires-Dist: numpy; extra == "finetune"
+Requires-Dist: pandas; extra == "finetune"
+Requires-Dist: peft; extra == "finetune"
+Requires-Dist: pyarrow; extra == "finetune"
+Requires-Dist: torchao; extra == "finetune"
+Requires-Dist: transformers; extra == "finetune"
+Requires-Dist: trl; extra == "finetune"
 Requires-Dist: unsloth[colab-new] @ git+https://github.com/unslothai/unsloth.git ; extra == "finetune"

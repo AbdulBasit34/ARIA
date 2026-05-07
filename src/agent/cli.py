@@ -8,8 +8,8 @@ from src.utils.config import load_config
 from src.utils.logging import setup_logging
 
 
-def run_prompt(prompt: str, config_path: Path) -> None:
-    config = load_config(config_path)
+def run_prompt(prompt: str, config_path: Path, profile_path: Path | None = None) -> None:
+    config = load_config(config_path, profile_path)
     setup_logging(config)
     response = OllamaClient(config).generate(prompt)
     print(
@@ -27,8 +27,8 @@ def run_prompt(prompt: str, config_path: Path) -> None:
     )
 
 
-def run_research(question: str, config_path: Path) -> None:
-    config = load_config(config_path)
+def run_research(question: str, config_path: Path, profile_path: Path | None = None) -> None:
+    config = load_config(config_path, profile_path)
     setup_logging(config)
     report = ResearchWorkflow(config).run(question)
     print(report.model_dump_json(indent=2))
@@ -37,6 +37,7 @@ def run_research(question: str, config_path: Path) -> None:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Run ARIA agent commands.")
     parser.add_argument("--config", type=Path, default=Path("configs/config.yaml"))
+    parser.add_argument("--profile", type=Path, default=None)
     subparsers = parser.add_subparsers(dest="command")
 
     prompt_parser = subparsers.add_parser("prompt")
@@ -52,11 +53,11 @@ def build_parser() -> argparse.ArgumentParser:
 def main() -> None:
     args = build_parser().parse_args()
     if args.command == "prompt":
-        run_prompt(args.prompt, args.config)
+        run_prompt(args.prompt, args.config, args.profile)
     elif args.command == "research":
-        run_research(args.question, args.config)
+        run_research(args.question, args.config, args.profile)
     elif args.legacy_prompt:
-        run_prompt(args.legacy_prompt, args.config)
+        run_prompt(args.legacy_prompt, args.config, args.profile)
     else:
         build_parser().print_help()
 

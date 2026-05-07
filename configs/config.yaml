@@ -28,7 +28,7 @@ chunking:
 embeddings:
   model_name: sentence-transformers/all-MiniLM-L6-v2
   batch_size: 32
-  device: auto
+  device: cuda
   local_files_only: true
 
 qdrant:
@@ -60,7 +60,8 @@ ollama:
 
 finetuning:
   base_model: unsloth/llama-3-8b-bnb-4bit
-  dataset_name: qasper
+  dataset_name: allenai/qasper
+  dataset_split: train
   output_dir: models/aria-llama3-qasper-lora
   max_seq_len: 512
   batch_size: 1
@@ -70,6 +71,21 @@ finetuning:
   save_steps: 60
   logging_steps: 5
   load_in_4bit: true
+  seed: 3407
+  warmup_steps: 10
+  max_train_samples: 1200
+  lora:
+    r: 16
+    alpha: 16
+    dropout: 0.0
+    target_modules:
+      - q_proj
+      - k_proj
+      - v_proj
+      - o_proj
+      - gate_proj
+      - up_proj
+      - down_proj
 
 serving:
   host: 127.0.0.1

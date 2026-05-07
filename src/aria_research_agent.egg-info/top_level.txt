@@ -1,4 +1,7 @@
 __init__
+agent
+finetuning
 ingestion
 retrieval
+serving
 utils

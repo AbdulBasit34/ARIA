@@ -6,7 +6,6 @@ from loguru import logger
 from omegaconf import DictConfig
 
 from src.agent.schemas import ResearchReport
-from src.agent.workflow import ResearchWorkflow
 from src.serving.schemas import ResearchRequest, ResearchResponse
 from src.utils.config import load_config
 from src.utils.logging import setup_logging
@@ -26,7 +25,7 @@ def create_app(
 ) -> FastAPI:
     resolved_config = config or load_config()
     setup_logging(resolved_config)
-    factory = workflow_factory or (lambda cfg: ResearchWorkflow(cfg))
+    factory = workflow_factory or build_workflow
 
     api = FastAPI(title="ARIA", version="0.1.0")
     api.state.config = resolved_config
@@ -54,6 +53,12 @@ def get_workflow(api: FastAPI) -> WorkflowRunner:
     if api.state.workflow is None:
         api.state.workflow = api.state.workflow_factory(api.state.config)
     return api.state.workflow
+
+
+def build_workflow(config: DictConfig) -> WorkflowRunner:
+    from src.agent.workflow import ResearchWorkflow
+
+    return ResearchWorkflow(config)
 
 
 app = create_app()

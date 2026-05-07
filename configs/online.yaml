@@ -1,0 +1,12 @@
+arxiv:
+  mode: online
+  use_cache_fallback: false
+  request_delay_seconds: 5.0
+  num_retries: 6
+  retry_backoff_seconds: 20.0
+
+embeddings:
+  local_files_only: true
+
+qdrant:
+  mode: local
