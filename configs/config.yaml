@@ -1,0 +1,64 @@
+project:
+  name: ARIA
+  data_dir: data
+  models_dir: models
+
+logging:
+  level: INFO
+  app_log_path: data/logs/aria.log
+  llm_log_path: data/logs/llm_calls.jsonl
+  rotation: 10 MB
+  retention: 14 days
+
+arxiv:
+  max_results: 8
+  sort_by: relevance
+  sort_order: descending
+  request_delay_seconds: 3.0
+
+chunking:
+  chunk_size_tokens: 220
+  chunk_overlap_tokens: 45
+
+embeddings:
+  model_name: sentence-transformers/all-MiniLM-L6-v2
+  batch_size: 32
+  device: auto
+
+qdrant:
+  url: http://localhost:6333
+  collection_name: aria_papers
+  vector_size: 384
+  distance: cosine
+
+retrieval:
+  dense_limit: 20
+  bm25_limit: 20
+  final_limit: 8
+  rrf_k: 60
+
+ollama:
+  base_url: http://localhost:11434
+  model: aria-llama3-8b-q4
+  fallback_model: llama3:8b-instruct-q4_K_M
+  timeout_seconds: 120
+  temperature: 0.2
+  num_ctx: 4096
+  num_predict: 900
+
+finetuning:
+  base_model: unsloth/llama-3-8b-bnb-4bit
+  dataset_name: qasper
+  output_dir: models/aria-llama3-qasper-lora
+  max_seq_len: 512
+  batch_size: 1
+  gradient_accumulation_steps: 4
+  learning_rate: 0.0002
+  max_steps: 120
+  save_steps: 60
+  logging_steps: 5
+  load_in_4bit: true
+
+serving:
+  host: 127.0.0.1
+  port: 8000
