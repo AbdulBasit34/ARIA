@@ -13,7 +13,7 @@ def setup_logging(config: DictConfig) -> None:
     logger.add(
         sys.stderr,
         level=str(config.logging.level),
-        enqueue=True,
+        enqueue=False,
         backtrace=False,
         diagnose=False,
     )
@@ -22,7 +22,7 @@ def setup_logging(config: DictConfig) -> None:
         level=str(config.logging.level),
         rotation=str(config.logging.rotation),
         retention=str(config.logging.retention),
-        enqueue=True,
+        enqueue=False,
         backtrace=False,
         diagnose=False,
     )

@@ -24,9 +24,12 @@ embeddings:
   model_name: sentence-transformers/all-MiniLM-L6-v2
   batch_size: 32
   device: auto
+  local_files_only: false
 
 qdrant:
+  mode: local
   url: http://localhost:6333
+  path: data/qdrant_local
   collection_name: aria_papers
   vector_size: 384
   distance: cosine

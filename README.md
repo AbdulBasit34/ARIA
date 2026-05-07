@@ -33,3 +33,17 @@ python -m pip install -e ".[finetune]"
 python -m pytest tests/test_chunker.py -q
 python -m src.ingestion.cli "retrieval augmented generation for scientific question answering" --output data/ingestion/arxiv_chunks.json
 ```
+
+## Module 2 Verification
+
+```powershell
+python -m pytest tests/test_retrieval.py -q
+python -m src.retrieval.cli index --input data/ingestion/arxiv_chunks.json
+python -m src.retrieval.cli search "How does hybrid retrieval improve research question answering?" --input data/ingestion/arxiv_chunks.json
+```
+
+Docker is optional. Set `qdrant.mode: http` in `configs/config.yaml` before using:
+
+```powershell
+docker compose up -d qdrant
+```
