@@ -47,3 +47,11 @@ Docker is optional. Set `qdrant.mode: http` in `configs/config.yaml` before usin
 ```powershell
 docker compose up -d qdrant
 ```
+
+## Module 3 Verification
+
+```powershell
+python -m pytest tests/test_ollama_client.py -q
+ollama pull llama3:8b-instruct-q4_K_M
+python -m src.agent.cli "Write one sentence about hybrid retrieval for research QA."
+```
