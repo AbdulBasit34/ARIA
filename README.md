@@ -53,5 +53,14 @@ docker compose up -d qdrant
 ```powershell
 python -m pytest tests/test_ollama_client.py -q
 ollama pull llama3:8b-instruct-q4_K_M
-python -m src.agent.cli "Write one sentence about hybrid retrieval for research QA."
+python -m src.agent.cli prompt "Write one sentence about hybrid retrieval for research QA."
 ```
+
+## Module 4 Verification
+
+```powershell
+python -m pytest tests/test_workflow.py -q
+python -m src.agent.cli research "How does hybrid retrieval improve research question answering?"
+```
+
+The default `arxiv.mode` is `local` while the project is being completed. Set it to `online` later to use live ArXiv search with retry/backoff.

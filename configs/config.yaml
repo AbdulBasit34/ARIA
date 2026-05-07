@@ -11,10 +11,15 @@ logging:
   retention: 14 days
 
 arxiv:
+  mode: local
   max_results: 8
   sort_by: relevance
   sort_order: descending
-  request_delay_seconds: 3.0
+  request_delay_seconds: 5.0
+  num_retries: 6
+  retry_backoff_seconds: 20.0
+  use_cache_fallback: true
+  cache_path: data/ingestion/arxiv_chunks.json
 
 chunking:
   chunk_size_tokens: 220
@@ -24,7 +29,7 @@ embeddings:
   model_name: sentence-transformers/all-MiniLM-L6-v2
   batch_size: 32
   device: auto
-  local_files_only: false
+  local_files_only: true
 
 qdrant:
   mode: local
@@ -39,6 +44,10 @@ retrieval:
   bm25_limit: 20
   final_limit: 8
   rrf_k: 60
+
+report:
+  max_context_chunks: 6
+  max_context_chars: 6000
 
 ollama:
   base_url: http://localhost:11434

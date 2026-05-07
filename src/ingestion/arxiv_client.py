@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
+from time import sleep
 from typing import Iterable
 
 import arxiv
@@ -56,7 +57,7 @@ def search_papers(question: str, config: DictConfig) -> list[ArxivPaper]:
     client = arxiv.Client(
         page_size=int(config.arxiv.max_results),
         delay_seconds=float(config.arxiv.request_delay_seconds),
-        num_retries=3,
+        num_retries=0,
     )
     search = arxiv.Search(
         query=question,
@@ -65,9 +66,51 @@ def search_papers(question: str, config: DictConfig) -> list[ArxivPaper]:
         sort_order=_sort_order(str(config.arxiv.sort_order)),
     )
 
-    papers = [_paper_from_result(result) for result in client.results(search)]
+    papers = _fetch_with_backoff(client, search, question, config)
     logger.info("Fetched {} ArXiv papers for query: {}", len(papers), question)
     return papers
+
+
+def _fetch_with_backoff(
+    client: arxiv.Client,
+    search: arxiv.Search,
+    question: str,
+    config: DictConfig,
+) -> list[ArxivPaper]:
+    max_attempts = int(config.arxiv.num_retries) + 1
+    base_delay = float(config.arxiv.retry_backoff_seconds)
+    last_error: Exception | None = None
+
+    for attempt in range(1, max_attempts + 1):
+        try:
+            return [_paper_from_result(result) for result in client.results(search)]
+        except arxiv.HTTPError as error:
+            last_error = error
+            status = getattr(error, "status", None) or _status_from_error(error)
+            if status not in {429, 503} or attempt == max_attempts:
+                raise
+            delay = base_delay * attempt
+            logger.warning(
+                "ArXiv returned HTTP {} for '{}'. Retrying in {:.1f}s ({}/{})",
+                status,
+                question,
+                delay,
+                attempt,
+                max_attempts - 1,
+            )
+            sleep(delay)
+
+    if last_error is not None:
+        raise last_error
+    return []
+
+
+def _status_from_error(error: Exception) -> int | None:
+    message = str(error)
+    for status in (429, 503):
+        if f"HTTP {status}" in message:
+            return status
+    return None
 
 
 def papers_to_records(papers: Iterable[ArxivPaper]) -> list[dict[str, object]]:
