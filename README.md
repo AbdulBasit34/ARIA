@@ -64,3 +64,16 @@ python -m src.agent.cli research "How does hybrid retrieval improve research que
 ```
 
 The default `arxiv.mode` is `local` while the project is being completed. Set it to `online` later to use live ArXiv search with retry/backoff.
+
+## Module 5 Verification
+
+```powershell
+python -m pytest tests/test_serving.py -q
+python -m src.serving.cli
+```
+
+In another PowerShell window:
+
+```powershell
+Invoke-RestMethod -Method Post -Uri http://127.0.0.1:8000/research -ContentType "application/json" -Body '{"question":"How does hybrid retrieval improve research question answering?"}'
+```
